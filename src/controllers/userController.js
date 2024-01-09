@@ -1,10 +1,10 @@
+const User = require('../models/User');
 const controller = {
   getLogin: (req, res) => {
     // Lógica del controlador para la página de inicio
     res.render('users/login'); // Renderiza la plantilla 'login.ejs' en la carpeta 'views'
   },
-  
-  
+    
   postLogin: (req, res) => {
     res.send(req.body);
 
@@ -39,6 +39,32 @@ const controller = {
 			}
 		});
 	},
+
+	processRegister: (req, res) => {
+		let userInDB = User.findByField('email', req.body.email);
+
+		if (userInDB) {
+			return res.render('register', {
+				errors: {
+					email: {
+						msg: 'Este email ya está registrado'
+					}
+				},
+				oldData: req.body
+			});
+		}
+
+		let userToCreate = {
+			...req.body,
+			password: bcryptjs.hashSync(req.body.password, 10),
+			//avatar: req.file.filename
+		}
+
+		let userCreated = User.create(userToCreate);
+
+		return res.redirect('/user/login');
+	},
+
 	profile: (req, res) => {
 		return res.render('userProfile', {
 			user: req.session.userLogged
@@ -55,7 +81,7 @@ const controller = {
   
   getRegister: (req, res) => {
     // Lógica del controlador para la página de inicio
-    res.render('users/register'); // Renderiza la plantilla 'register.ejs' en la carpeta 'views'
+    res.render('users/register'); // Renderiza la plantilla 'register.ejs' en la carpeta 'views/users'
   },
 };
 

@@ -1,8 +1,8 @@
 const express = require('express');
-const router=express.Router();
+const router = express.Router();
 
 //let userController=require('../controllers/userController.js');
-const { getLogin, postLogin, profile, logout } = require('../controllers/userController.js')
+const { getLogin, postLogin, profile, logout, getRegister, processRegister } = require('../controllers/userController.js')
 
 //Formulario de Login
 router.get('/login', getLogin);
@@ -16,6 +16,10 @@ router.post('/login', postLogin);
 // Logout
 //router.get('/logout/', userController.logout);
 
-//router.get('/register', userController.getRegister);
+router.get('/register', getRegister);
+
+// Procesar el registro
+//router.post('/register', uploadFile.single('avatar'), validations, usersController.processRegister);
+router.post('/register', processRegister);
 
 module.exports=router;
